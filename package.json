@@ -1,0 +1,42 @@
+{
+  "name": "ooad",
+  "version": "1.0.0",
+  "description": "Coffee managment system built with MERN stack",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "author": "Tay Trung",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^4.1.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.5",
+    "rc-swipeout": "^2.0.11",
+    "react-modal": "^3.11.1",
+    "react-native-swipeout": "^2.3.6",
+    "react-notifications": "^1.4.3",
+    "react-select": "^3.0.8",
+    "react-swipe-to-delete-component": "^0.5.4",
+    "react-widgets": "^4.4.11",
+    "sudo": "^1.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.3",
+    "nodemon": "^1.19.3",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1"
+  }
+}
