@@ -1,7 +1,8 @@
 # OOAD
+
 Coffee managment system built with MERN stack
 
-> Coffee managment system built with MERN stack 
+> Coffee managment system built with MERN stack
 
 ## Quick Start 1
 
