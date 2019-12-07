@@ -3,7 +3,7 @@ Coffee managment system built with MERN stack
 
 > Coffee managment system built with MERN stack 
 
-## Quick Start
+## Quick Start 1
 
 Add your MONGO_URI to the default.json file. Make sure you set an env var for that and the jwtSecret on deployment
 
