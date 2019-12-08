@@ -1,40 +1,36 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
+import Product from "../../models/Product";
 
-const Product = require("../../models/Product");
-
-
-router.get("/:id", (req, res) => {
-  Product.findById(req.params.id)
+router.get("/:id", ({ params }, res) => {
+  Product.findById(params.id)
     .then(product => {
       res.json(product);
     }) //return lại item
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-
-router.put("/:id", (req, res) => {
-  console.log(req.body);
+router.put("/:id", ({ body }, res) => {
+  console.log(body);
 
   const newProduct = {
-    idCategory: req.body.idCategory,
-    name: req.body.name,
-    price: req.body.price,
-    quantity: req.body.quantity,
-    status: req.body.status,
-    _id: req.body._id
+    idCategory: body.idCategory,
+    name: body.name,
+    price: body.price,
+    quantity: body.quantity,
+    status: body.status,
+    _id: body._id
   };
-  Product.findByIdAndUpdate(req.body._id, newProduct, { new: true })
+  Product.findByIdAndUpdate(body._id, newProduct, { new: true })
     .then(product => {
       res.json(product);
     }) //return lại item
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-
-router.get("/:objects/:page/:query", (req, res) => {
-  const { objects, page, query } = req.params;
+router.get("/:objects/:page/:query", ({ params }, res) => {
+  const { objects, page, query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -47,9 +43,8 @@ router.get("/:objects/:page/:query", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-
-router.get("/count/:query", (req, res) => {
-  const { query } = req.params;
+router.get("/count/:query", ({ params }, res) => {
+  const { query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -61,15 +56,14 @@ router.get("/count/:query", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-
-router.post("/", (req, res) => {
+router.post("/", ({ body }, res) => {
   const newProduct = new Product({
-    _id: req.body._id,
-    idCategory: req.body.idCategory,
-    name: req.body.name,
-    price: req.body.price,
-    quantity: req.body.quantity,
-    status: req.body.status
+    _id: body._id,
+    idCategory: body.idCategory,
+    name: body.name,
+    price: body.price,
+    quantity: body.quantity,
+    status: body.status
   });
 
   newProduct
@@ -78,12 +72,11 @@ router.post("/", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-
-router.delete("/:id", (req, res) => {
+router.delete("/:id", ({ params }, res) => {
   //console.log(req.params.id);
-  Product.findByIdAndDelete(req.params.id)
+  Product.findByIdAndDelete(params.id)
     .then(item => res.json(item)) //Return lại item đã xóa
     .catch(err => res.json(err)); //Catch lỗi rồi return ra
 });
 
-module.exports = router;
+export default router;

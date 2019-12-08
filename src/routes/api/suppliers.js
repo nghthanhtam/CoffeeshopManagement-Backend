@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 //Supplier Model
-const Supplier = require("../../models/Supplier");
+import Supplier from "../../models/Supplier";
 
 //search theo query, them duong dan /api/supplier/search/ trong file server
-router.get("/search/:query", (req, res) => {
-  const { query } = req.params;
+router.get("/search/:query", ({ params }, res) => {
+  const { query } = params;
   //let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -17,32 +17,32 @@ router.get("/search/:query", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-router.get("/:id", (req, res) => {
-  Supplier.findById(req.params.id)
+router.get("/:id", ({ params }, res) => {
+  Supplier.findById(params.id)
     .then(supplier => {
       res.json(supplier);
-    }) 
-    .catch(err => res.json(err)); 
+    })
+    .catch(err => res.json(err));
 });
 
-router.get('', (req, res) => {
+router.get("", (req, res) => {
   Supplier.find()
-  .then(supplier => {
-    res.json(supplier);
-  }) // resturn lại item
-  .catch(err => res.json(err)); // catch lỗi rồi return ra
+    .then(supplier => {
+      res.json(supplier);
+    }) // resturn lại item
+    .catch(err => res.json(err)); // catch lỗi rồi return ra
 });
-             
-router.put("/:id", (req, res) => {
-  console.log(req.body);
+
+router.put("/:id", ({ body }, res) => {
+  console.log(body);
 
   const newSupplier = {
-    name: req.body.name,
-    _id: req.body._id,
-    phone: req.body.phone,
-    address: req.body.address,
+    name: body.name,
+    _id: body._id,
+    phone: body.phone,
+    address: body.address
   };
-  Supplier.findByIdAndUpdate(req.body._id, newSupplier, { new: true })
+  Supplier.findByIdAndUpdate(body._id, newSupplier, { new: true })
     .then(supplier => {
       res.json(supplier);
     }) //return lại item
@@ -51,9 +51,9 @@ router.put("/:id", (req, res) => {
 
 //@route GET /supplier     (dùng phương thức GET và route là /supplier)
 //@desc  Get All categories  (miểu tả APi làm gì)
-//@access Public             
-router.get("/:objects/:page/:query", (req, res) => {
-  const { objects, page, query } = req.params;
+//@access Public
+router.get("/:objects/:page/:query", ({ params }, res) => {
+  const { objects, page, query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -66,9 +66,8 @@ router.get("/:objects/:page/:query", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-           
-router.get("/count/:query", (req, res) => {
-  const { query } = req.params;
+router.get("/count/:query", ({ params }, res) => {
+  const { query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -80,12 +79,11 @@ router.get("/count/:query", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
-           
-router.post("/", (req, res) => {
+router.post("/", ({ body }, res) => {
   const newSupplier = new Supplier({
-    name: req.body.name,
-    phone: req.body.phone,
-    address: req.body.address
+    name: body.name,
+    phone: body.phone,
+    address: body.address
   });
 
   newSupplier
@@ -94,14 +92,12 @@ router.post("/", (req, res) => {
     .catch(err => res.json(err)); //Catch lỗi rồi return ra;
 });
 
+router.delete("/:id", ({ params }, res) => {
+  console.log(params.id);
 
-router.delete("/:id", (req, res) => {
-
-  console.log(req.params.id);
-
-  Supplier.findByIdAndDelete(req.params.id)
+  Supplier.findByIdAndDelete(params.id)
     .then(item => res.json(item)) //Return lại item đã xóa
     .catch(err => res.json(err)); //Catch lỗi rồi return ra
 });
 
-module.exports = router;
+export default router;

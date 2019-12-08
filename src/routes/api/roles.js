@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const auth = require("../../middleware/auth");
+import auth from "../../middleware/auth";
 
 //Category Model
-const Role = require("../../models/Role");
+import Role from "../../models/Role";
 
 //@route GET /role/:id
 //@desc  Get role by ID
 //@access Private
-router.get("/:id", auth, (req, res) => {
-  Role.findById(req.params.id)
+router.get("/:id", auth, ({ params }, res) => {
+  Role.findById(params.id)
     .then(role => {
       res.json(role);
     })
@@ -19,8 +19,8 @@ router.get("/:id", auth, (req, res) => {
 //@route PUT /role/:id
 //@desc  Update role by ID
 //@access Private
-router.put("/:id", auth, (req, res) => {
-  console.log(req.body);
+router.put("/:id", auth, ({ body }, res) => {
+  console.log(body);
   const {
     name,
     memberManagement,
@@ -33,7 +33,7 @@ router.put("/:id", auth, (req, res) => {
     materialManagement,
     roleManagement,
     materialReceiptNoteManagement
-  } = req.body;
+  } = body;
   const newRole = {
     name,
     memberManagement,
@@ -47,7 +47,7 @@ router.put("/:id", auth, (req, res) => {
     materialReceiptNoteManagement,
     roleManagement
   };
-  Role.findByIdAndUpdate(req.body._id, newRole, { new: true })
+  Role.findByIdAndUpdate(body._id, newRole, { new: true })
     .then(role => {
       res.json(role);
     })
@@ -57,8 +57,8 @@ router.put("/:id", auth, (req, res) => {
 //@route GET /role
 //@desc  Get All roles
 //@access Private
-router.get("/:objects/:page/:query", auth, (req, res) => {
-  const { objects, page, query } = req.params;
+router.get("/:objects/:page/:query", auth, ({ params }, res) => {
+  const { objects, page, query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -74,8 +74,8 @@ router.get("/:objects/:page/:query", auth, (req, res) => {
 //@route GET /role
 //@desc  Get All roles
 //@access Private
-router.get("/count/:query", (req, res) => {
-  const { query } = req.params;
+router.get("/count/:query", ({ params }, res) => {
+  const { query } = params;
   let newQuery = "";
   if (query === "undefined") newQuery = "";
   else newQuery = query;
@@ -90,7 +90,7 @@ router.get("/count/:query", (req, res) => {
 //@route POST /role
 //@desc  Create a role
 //@access Private
-router.post("/", (req, res) => {
+router.post("/", ({ body }, res) => {
   const {
     _id,
     name,
@@ -104,7 +104,7 @@ router.post("/", (req, res) => {
     materialManagement,
     roleManagement,
     materialReceiptNoteManagement
-  } = req.body;
+  } = body;
 
   const newRole = new Role({
     _id,
@@ -130,10 +130,10 @@ router.post("/", (req, res) => {
 //@route DELETE /category/:id
 //@desc  Delete a category
 //@access Private
-router.delete("/:id", (req, res) => {
-  Role.findByIdAndDelete(req.params.id)
+router.delete("/:id", ({ params }, res) => {
+  Role.findByIdAndDelete(params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err));
 });
 
-module.exports = router;
+export default router;

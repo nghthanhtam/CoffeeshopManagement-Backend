@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 //Create Schema
 
 const SupplierSchema = new Schema({
   name: {
-    type: String, 
-    required: true 
+    type: String,
+    required: true
   },
   phone: {
     type: Number,
@@ -23,5 +23,6 @@ const SupplierSchema = new Schema({
   }
 });
 
-module.exports = Supplier = mongoose.model("supplier", SupplierSchema);
+const Supplier = mongoose.model("supplier", SupplierSchema);
 
+export default Supplier;
