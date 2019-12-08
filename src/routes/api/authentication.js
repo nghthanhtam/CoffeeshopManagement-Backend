@@ -28,7 +28,7 @@ router.post('/', ({ body }, res) => {
           role: user.idRole
         },
         process.env.jwtSecret,
-        { expiresIn: 3600 },
+        { expiresIn: 24 * 3600 },
         (err, token) => {
           if (err) throw err
 
