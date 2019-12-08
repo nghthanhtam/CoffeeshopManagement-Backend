@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const CategorySchema = new Schema({
   name: {
@@ -13,8 +11,8 @@ const CategorySchema = new Schema({
     required: true,
     default: Date.now()
   }
-});
+})
 
-const Category = mongoose.model("category", CategorySchema);
+const Category = mongoose.model('category', CategorySchema)
 
-export default Category;
+export default Category

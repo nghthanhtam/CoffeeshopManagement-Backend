@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const SupplierSchema = new Schema({
   name: {
@@ -21,8 +19,8 @@ const SupplierSchema = new Schema({
     required: true,
     default: Date.now()
   }
-});
+})
 
-const Supplier = mongoose.model("supplier", SupplierSchema);
+const Supplier = mongoose.model('supplier', SupplierSchema)
 
-export default Supplier;
+export default Supplier

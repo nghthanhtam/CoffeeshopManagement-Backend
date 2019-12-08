@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const CounterSchema = new Schema({
   _id: {
@@ -13,8 +11,8 @@ const CounterSchema = new Schema({
     default: 0,
     required: true
   }
-});
+})
 
-const Counter = mongoose.model("counter", CounterSchema);
+const Counter = mongoose.model('counter', CounterSchema)
 
-export default Counter;
+export default Counter

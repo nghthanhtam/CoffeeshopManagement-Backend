@@ -1,10 +1,7 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const PaySlipSchema = new Schema({
-  //Không cần thuộc tính ID vì trong MongoDB sẽ tự tạo ID cho mình khi insert vào
   idMember: {
     type: String,
     required: false
@@ -23,8 +20,8 @@ const PaySlipSchema = new Schema({
     required: false,
     default: 0
   }
-});
+})
 
-const PaySlip = mongoose.model("payslip", PaySlipSchema);
+const PaySlip = mongoose.model('payslip', PaySlipSchema)
 
-export default PaySlip;
+export default PaySlip

@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const RoleSchema = new Schema({
   name: {
@@ -54,8 +52,8 @@ const RoleSchema = new Schema({
     required: true,
     default: Date.now()
   }
-});
+})
 
-const Role = mongoose.model("role", RoleSchema);
+const Role = mongoose.model('role', RoleSchema)
 
-export default Role;
+export default Role

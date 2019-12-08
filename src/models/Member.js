@@ -1,20 +1,17 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const MemberSchema = new Schema({
-  //Không cần thuộc tính ID vì trong MongoDB sẽ tự tạo ID cho mình khi insert vào
   name: {
-    type: String, // Kiểu String
-    required: true //=> khi insert vào thì bắt buộc phải có "name"
+    type: String,
+    required: true
   },
   phone: {
-    type: String, // Kiểu String
+    type: String,
     required: true
   },
   point: {
-    type: Number, // Kiểu Number
+    type: Number,
     required: true,
     default: 0
   },
@@ -23,8 +20,8 @@ const MemberSchema = new Schema({
     required: true,
     default: Date.now()
   }
-});
+})
 
-const Member = mongoose.model("member", MemberSchema);
+const Member = mongoose.model('member', MemberSchema)
 
-export default Member;
+export default Member

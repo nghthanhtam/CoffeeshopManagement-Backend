@@ -1,10 +1,7 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-
-//Create Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const InvoiceSchema = new Schema({
-  //Không cần thuộc tính ID vì trong MongoDB sẽ tự tạo ID cho mình khi insert vào
   idMember: {
     type: String,
     required: true
@@ -27,8 +24,8 @@ const InvoiceSchema = new Schema({
     type: String,
     required: false
   }
-});
+})
 
-const Invoice = mongoose.model("invoice", InvoiceSchema);
+const Invoice = mongoose.model('invoice', InvoiceSchema)
 
-export default Invoice;
+export default Invoice
