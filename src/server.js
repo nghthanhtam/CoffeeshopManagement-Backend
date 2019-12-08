@@ -31,6 +31,10 @@ db.once('open', () => {
   console.log('connect to mongodb')
 })
 
+app.get('/ping', (req, res) => {
+  res.json('pong')
+})
+
 app.use('/api/payslip', payslip)
 app.use('/api/invoice', invoice)
 app.use('/api/product', product)
