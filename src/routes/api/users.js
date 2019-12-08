@@ -2,7 +2,7 @@ import express from 'express'
 const router = express.Router()
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-require('dotenv').config()
+import 'dotenv/config'
 
 import User from '../../models/User'
 

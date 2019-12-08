@@ -1,8 +1,9 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
-require('dotenv').config()
 import bodyParser from 'body-parser'
+import 'dotenv/config'
+
 import categories from './routes/api/categories'
 import suppliers from './routes/api/suppliers'
 import users from './routes/api/users'
@@ -12,6 +13,7 @@ import member from './routes/api/members'
 import product from './routes/api/products'
 import invoice from './routes/api/invoices'
 import payslip from './routes/api/payslips'
+
 const app = express()
 
 app.use(cors())
@@ -26,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 })
 
 const db = mongoose.connection
+
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', () => {
   console.log('connect to mongodb')
