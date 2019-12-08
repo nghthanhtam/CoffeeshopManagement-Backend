@@ -7,44 +7,47 @@ import 'dotenv/config'
 
 import User from '../../models/User'
 
-router.post('/', ({ body }, res) => {
-  const { username, password } = body
+router.post('/', async ({ body }, res, next) => {
+  try {
+    const { username, password } = body
 
-  if (!username || !password) {
-    return res.status(400).json({ msg: 'Please enter all fields' })
-  }
+    if (!username || !password) {
+      return res.status(400).json({ msg: 'Please enter all fields' })
+    }
 
-  User.findOne({ username }).then(user => {
+    let user = await User.findOne({ username })
+
     if (!user) {
       return res.status(400).json({ msg: "User doesn't exist" })
     }
 
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' })
+    let isMatch = await bcrypt.compare(password, user.password)
 
-      jwt.sign(
-        {
-          id: user.id,
-          role: user.idRole
-        },
-        process.env.jwtSecret,
-        { expiresIn: 24 * 3600 },
-        (err, token) => {
-          if (err) throw err
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Invalid credentials' })
+    }
 
-          res.json({
-            token,
-            user: {
-              name: user.username,
-              id: user.id,
-              idRole: user.idRole,
-              fullName: user.fullName
-            }
-          })
-        }
-      )
+    let token = jwt.sign(
+      {
+        id: user.id,
+        role: user.idRole
+      },
+      process.env.jwtSecret,
+      { expiresIn: 24 * 3600 }
+    )
+
+    res.json({
+      token,
+      user: {
+        name: user.username,
+        id: user.id,
+        idRole: user.idRole,
+        fullName: user.fullName
+      }
     })
-  })
+  } catch (error) {
+    return next(error)
+  }
 })
 
 router.get('/user', auth, ({ user }, res) => {

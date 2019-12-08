@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import 'dotenv/config'
+import 'babel-core/register'
+import 'babel-polyfill'
 
 import categories from './routes/api/categories'
 import suppliers from './routes/api/suppliers'
