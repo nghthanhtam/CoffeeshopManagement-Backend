@@ -6,23 +6,22 @@ Coffee managment system built with MERN stack
 
 ## Quick Start 1
 
-Add your MONGO_URI to the default.json file. Make sure you set an env var for that and the jwtSecret on deployment
+Create .env file in root folder
+
+Add your MONGODB_URI and jwtSecret to the .env file
 
 ```bash
+# Install yarn
+npm install -g yarn
+
 # Install dependencies for server
-npm install
+yarn install
 
-# Install dependencies for client
-npm run client-install
+# Run the Express server with hot loading
+yarn server
 
-# Run the client & server with concurrently
-npm run dev
+# Run the Express server without hot loading
+yarn start
 
-# Run the Express server only
-npm run server
-
-# Run the React client only
-npm run client
-
-# Server runs on http://localhost:5000 and client on http://localhost:3000
+# Server runs on http://localhost:5000
 ```
