@@ -12,8 +12,6 @@ router.get('/:id', ({ params }, res) => {
 })
 
 router.put('/:id', ({ body }, res) => {
-  console.log(body)
-
   const newInvoice = {
     idMember: body.idMember,
     idUser: body.idUser,

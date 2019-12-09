@@ -32,8 +32,6 @@ router.get('', (req, res) => {
 })
 
 router.put('/:id', ({ body }, res) => {
-  console.log(body)
-
   const newSupplier = {
     name: body.name,
     _id: body._id,
@@ -88,8 +86,6 @@ router.post('/', ({ body }, res) => {
 })
 
 router.delete('/:id', ({ params }, res) => {
-  console.log(params.id)
-
   Supplier.findByIdAndDelete(params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))

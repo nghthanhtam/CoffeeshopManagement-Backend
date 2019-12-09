@@ -1,46 +1,25 @@
 import express from 'express'
 const router = express.Router()
 
-import Member from '../../models/Member'
-
-router.get('/search/:query', ({ params }, res) => {
-  const { query } = params
-
-  if (query === 'undefined') newQuery = ''
-  else newQuery = query
-
-  Member.find({ name: { $regex: newQuery, $options: 'i' } })
-    .sort({ createAt: -1 })
-    .then(member => res.json(member))
-    .catch(err => res.json(err))
-})
+import Material from '../../models/Material'
 
 router.get('/:id', ({ params }, res) => {
-  Member.findById(params.id)
-    .then(member => {
-      res.json(member)
-    })
-    .catch(err => res.json(err))
-})
-
-router.get('', (req, res) => {
-  Member.find()
-    .then(member => {
-      res.json(member)
+  Material.findById(params.id)
+    .then(material => {
+      res.json(material)
     })
     .catch(err => res.json(err))
 })
 
 router.put('/:id', ({ body }, res) => {
-  const newMember = {
+  const newMaterial = {
     name: body.name,
-    phone: body.phone,
-    point: body.point,
+    quantity: body.quantity,
     _id: body._id
   }
-  Member.findByIdAndUpdate(body._id, newMember, { new: true })
-    .then(member => {
-      res.json(member)
+  Material.findByIdAndUpdate(body._id, newMaterial, { new: true })
+    .then(material => {
+      res.json(material)
     })
     .catch(err => res.json(err))
 })
@@ -51,11 +30,11 @@ router.get('/:objects/:page/:query', ({ params }, res) => {
   if (query === 'undefined') newQuery = ''
   else newQuery = query
 
-  Member.find({ name: { $regex: newQuery, $options: 'i' } })
+  Material.find({ name: { $regex: newQuery, $options: 'i' } })
     .limit(Number(objects))
     .skip(objects * (page - 1))
     .sort({ createAt: -1 })
-    .then(member => res.json(member))
+    .then(material => res.json(material))
     .catch(err => res.json(err))
 })
 
@@ -65,7 +44,7 @@ router.get('/count/:query', ({ params }, res) => {
   if (query === 'undefined') newQuery = ''
   else newQuery = query
 
-  Member.find({ name: { $regex: newQuery, $options: 'i' } })
+  Material.find({ name: { $regex: newQuery, $options: 'i' } })
     .countDocuments()
     .sort({ createAt: -1 })
     .then(counter => res.json(counter))
@@ -73,21 +52,19 @@ router.get('/count/:query', ({ params }, res) => {
 })
 
 router.post('/', ({ body }, res) => {
-  const newMember = new Member({
-    _id: body._id,
+  const newMaterial = new Material({
     name: body.name,
-    phone: body.phone,
-    point: body.point
+    quantity: body.quantity
   })
 
-  newMember
+  newMaterial
     .save()
-    .then(member => res.json(member))
+    .then(material => res.json(material))
     .catch(err => res.json(err))
 })
 
 router.delete('/:id', ({ params }, res) => {
-  Member.findByIdAndDelete(params.id)
+  Material.findByIdAndDelete(params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))
 })

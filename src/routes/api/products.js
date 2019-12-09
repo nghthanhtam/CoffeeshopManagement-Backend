@@ -12,8 +12,6 @@ router.get('/:id', ({ params }, res) => {
 })
 
 router.put('/:id', ({ body }, res) => {
-  console.log(body)
-
   const newProduct = {
     idCategory: body.idCategory,
     name: body.name,

@@ -15,6 +15,7 @@ import member from './routes/api/members'
 import product from './routes/api/products'
 import invoice from './routes/api/invoices'
 import payslip from './routes/api/payslips'
+import materials from './routes/api/materials'
 
 const app = express()
 
@@ -49,6 +50,7 @@ app.use('/api/auth', auth)
 app.use('/api/category', categories)
 app.use('/api/supplier', suppliers)
 app.use('/api/user', users)
+app.use('/api/material', materials)
 
 const port = process.env.PORT || 5000
 

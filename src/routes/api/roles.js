@@ -13,7 +13,6 @@ router.get('/:id', auth, ({ params }, res) => {
 })
 
 router.put('/:id', auth, ({ body }, res) => {
-  console.log(body)
   const {
     name,
     memberManagement,

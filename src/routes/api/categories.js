@@ -1,7 +1,6 @@
 import express from 'express'
 const router = express.Router()
 import auth from '../../middleware/auth'
-import mongoose from 'mongoose'
 
 import Category from '../../models/Category'
 
@@ -9,7 +8,6 @@ router.get('/:id', auth, ({ params }, res) => {
   Category.findById(params.id)
     .then(category => {
       res.json(category)
-      console.log(category)
     })
     .catch(err => res.json(err))
 })
@@ -58,7 +56,6 @@ router.post('/', auth, ({ body }, res) => {
     createAt: body.createAt,
     name: body.name
   })
-  console.log(body._id)
 
   newCategory
     .save()

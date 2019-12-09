@@ -77,8 +77,6 @@ router.post('/', ({ body }, res) => {
 })
 
 router.delete('/:id', ({ params }, res) => {
-  console.log(params.id)
-
   PaySlip.findByIdAndDelete(params.id)
     .then(payslip => res.json(payslip))
     .catch(err => res.json(err))
