@@ -7,6 +7,9 @@ const bodyParser = require('body-parser')
 const categories = require('./routes/api/categories')
 const suppliers = require('./routes/api/suppliers')
 const users = require('./routes/api/users')
+const members = require('./routes/api/members')
+const storagereports = require('./routes/api/storagereports')
+const materials = require('./routes/api/materials')
 
 const app = express()
 
@@ -35,11 +38,16 @@ app.use('/api/member', require('./routes/api/members'))
 app.use('/api/product', require('./routes/api/products'))
 app.use('/api/invoice', require('./routes/api/invoices'))
 app.use('/api/payslip', require('./routes/api/payslips'))
+app.use('/api/material', require('./routes/api/materials'))
+app.use('/api/storagereport', require('./routes/api/storagereports'))
 
 //Use routes (Mỗi lần tạo 1 route mới thì phải use nó ở đây thì mới chạy đc)
 app.use('/api/category', categories)
+app.use('/api/member', members)
 app.use('/api/supplier', suppliers)
 app.use('/api/user', users)
+app.use('/api/material', materials)
+app.use('/api/storagereport', storagereports)
 
 const port = process.env.PORT || 5000
 

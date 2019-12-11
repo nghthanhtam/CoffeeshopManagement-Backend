@@ -74,7 +74,6 @@ router.post("/", auth, (req, res) => {
     createAt: req.body.createAt,
     name: req.body.name
   });
-  console.log(req.body._id);
 
   newCategory
     .save()
@@ -82,31 +81,7 @@ router.post("/", auth, (req, res) => {
     .catch(err => res.json(err));
 });
 
-function insertDocument(doc, targetCollection) {
-  while (1) {
-    var cursor = targetCollection
-      .find({}, { _id: 1 })
-      .sort({ _id: -1 })
-      .limit(1);
 
-    var seq = cursor.hasNext() ? cursor.next()._id + 1 : 1;
-
-    doc._id = seq;
-
-    var results = targetCollection.insert(doc);
-
-    if (results.hasWriteError()) {
-      if (results.writeError.code == 11000 /* dup key */) continue;
-      else print("unexpected error inserting data: " + tojson(results));
-    }
-
-    break;
-  }
-}
-
-//@route DELETE /category/:id
-//@desc  Delete a category
-//@access Private
 router.delete("/:id", auth, (req, res) => {
   Category.findByIdAndDelete(req.params.id)
     .then(item => res.json(item))
