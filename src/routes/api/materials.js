@@ -1,5 +1,6 @@
 import express from 'express'
 const router = express.Router()
+import auth from '../../middleware/auth'
 
 import Material from '../../models/Material'
 
@@ -24,7 +25,7 @@ router.put('/:id', ({ body }, res) => {
     .catch(err => res.json(err))
 })
 
-router.get('/:objects/:page/:query', ({ params }, res) => {
+router.get('/:objects/:page/:query', auth, ({ params }, res) => {
   const { objects, page, query } = params
   let newQuery = ''
   if (query === 'undefined') newQuery = ''
@@ -51,7 +52,7 @@ router.get('/count/:query', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.post('/', ({ body }, res) => {
+router.post('/', auth, ({ body }, res) => {
   const newMaterial = new Material({
     name: body.name,
     quantity: body.quantity

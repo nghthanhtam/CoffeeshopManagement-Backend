@@ -3,10 +3,11 @@ const router = express.Router()
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
+import auth from '../../middleware/auth'
 
 import User from '../../models/User'
 
-router.post('/', ({ body }, res) => {
+router.post('/', auth, ({ body }, res) => {
   const { idRole, username, password, fullName, phoneNumber, address } = body
 
   if (
@@ -76,15 +77,18 @@ router.get('/:id', (req, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', (req, res) => {
-  const newUser = ({
-    idRole,
-    username,
-    password,
-    fullName,
-    phoneNumber,
-    address
-  } = req.body)
+router.put('/:id', auth, (req, res) => {
+  console.log(req.body)
+  const newUser = {
+    idRole: req.idRole,
+    username: req.username,
+    password: req.password,
+    fullName: req.fullName,
+    phoneNumber: req.phoneNumber,
+    address: req.address
+  }
+
+  console.log(newUser)
 
   bcrypt.hash(newUser.password, 10, (err, hash) => {
     if (err) return res.json(err)
@@ -124,13 +128,13 @@ router.get('/count/:query', (req, res) => {
     .catch(err => res.json(err))
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))
 })
 
-router.post('/cp/:id', (req, res) => {
+router.post('/cp/:id', auth, (req, res) => {
   const username = req.body.username
   const password = req.body.curPassword
 
