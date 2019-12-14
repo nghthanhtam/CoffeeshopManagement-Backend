@@ -7,8 +7,8 @@
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel src --out-dir build --source-maps=inline --verbose",
     "build": "yarn clean && yarn build-babel",
-    "start": "yarn build && node ./build/server.js",
-    "server": "yarn build --watch & sleep 5 && nodemon --watch build build/server.js"
+    "start": "yarn build && nodemon ./build/server.js",
+    "server": "yarn build && --watch & sleep 5 && nodemon --watch build build/server.js"
   },
   "author": "Tay Trung",
   "license": "ISC",

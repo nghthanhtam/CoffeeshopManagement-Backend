@@ -4,9 +4,12 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import auth from '../../middleware/auth'
 import 'dotenv/config'
-
+import Role from '../../models/Role'
 import User from '../../models/User'
 
+//@route POST api/auth
+//@desc Authenticate user
+//@access Public
 router.post('/', async ({ body }, res, next) => {
   try {
     const { username, password } = body
@@ -27,29 +30,38 @@ router.post('/', async ({ body }, res, next) => {
       return res.status(400).json({ msg: 'Invalid credentials' })
     }
 
-    let token = jwt.sign(
+    let role = await Role.findOne({ _id: user.idRole })
+
+    if (!role) {
+      return res.status(400).json({ msg: "Role doesn't exist" })
+    }
+    jwt.sign(
       {
         id: user.id,
-        role: user.idRole
+        idRole: user.idRole,
+        role
       },
       process.env.jwtSecret,
-      { expiresIn: 24 * 3600 }
-    )
-
-    res.json({
-      token,
-      user: {
-        name: user.username,
-        id: user.id,
-        idRole: user.idRole,
-        fullName: user.fullName
+      { expiresIn: 24 * 3600 },
+      (err, token) => {
+        if (err) throw err
+        res.json({
+          token,
+          user: {
+            id: user.id,
+            idRole: user.idRole
+          },
+          role
+        })
       }
-    })
+    )
   } catch (error) {
     return next(error)
   }
 })
-
+//@route GET api/auth/user
+//@desc Get user
+//@access Private
 router.get('/user', auth, ({ user }, res) => {
   User.findById(user.id)
     .select('-password')

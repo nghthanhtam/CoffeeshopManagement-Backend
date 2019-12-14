@@ -6,24 +6,27 @@ import 'dotenv/config'
 
 import User from '../../models/User'
 
-router.post('/', ({ body }, res) => {
-  const { idRole, username, password, fullName, phoneNumber, address } = body
+router.post('/', async ({ body }, res, next) => {
+  try {
+    const { idRole, username, password, fullName, phoneNumber, address } = body
 
-  if (
-    !username ||
-    !idRole ||
-    !fullName ||
-    !phoneNumber ||
-    !address ||
-    !password
-  ) {
-    return res.status(400).json({ msg: 'Please enter all fields' })
-  }
+    if (
+      !username ||
+      !idRole ||
+      !fullName ||
+      !phoneNumber ||
+      !address ||
+      !password
+    ) {
+      return res.status(400).json({ msg: 'Please enter all fields' })
+    }
 
-  User.findOne({ username }).then(user => {
+    let user = await User.findOne({ username })
+
     if (user) {
       return res.status(400).json({ msg: 'User already exist' })
     }
+
     const newUser = new User({
       username,
       idRole,
@@ -42,21 +45,21 @@ router.post('/', ({ body }, res) => {
           .then(user => {
             jwt.sign(
               {
-                id: user.id
+                id: user.id,
+                idRole: user.idRole,
+                role
               },
               process.env.jwtSecret,
-              { expiresIn: 3600 },
+              { expiresIn: 24 * 3600 },
               (err, token) => {
                 if (err) throw err
-
                 res.json({
                   token,
                   user: {
-                    name: user.username,
                     id: user.id,
-                    idRole: user.idRole,
-                    fullName: user.fullName
-                  }
+                    idRole: user.idRole
+                  },
+                  role
                 })
               }
             )
@@ -65,7 +68,9 @@ router.post('/', ({ body }, res) => {
           .catch(err => res.json(err))
       })
     })
-  })
+  } catch (error) {
+    return next(error)
+  }
 })
 
 router.get('/:id', (req, res) => {
