@@ -10,6 +10,8 @@ import User from '../../models/User'
 router.post('/', auth, ({ body }, res) => {
   const { idRole, username, password, fullName, phoneNumber, address } = body
 
+  console.log('post')
+
   if (
     !username ||
     !idRole ||
@@ -77,23 +79,20 @@ router.get('/:id', (req, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', auth, (req, res) => {
-  console.log(req.body)
+router.put('/:id', auth, ({ body }, res) => {
   const newUser = {
-    idRole: req.idRole,
-    username: req.username,
-    password: req.password,
-    fullName: req.fullName,
-    phoneNumber: req.phoneNumber,
-    address: req.address
+    idRole: body.idRole,
+    username: body.username,
+    password: body.password,
+    fullName: body.fullName,
+    phoneNumber: body.phoneNumber,
+    address: body.address
   }
-
-  console.log(newUser)
 
   bcrypt.hash(newUser.password, 10, (err, hash) => {
     if (err) return res.json(err)
     newUser.password = hash
-    User.findByIdAndUpdate(req.body._id, newUser, { new: true })
+    User.findByIdAndUpdate(body._id, newUser, { new: true })
       .then(user => {
         res.json(user)
       })
