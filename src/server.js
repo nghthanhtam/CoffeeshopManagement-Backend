@@ -17,6 +17,7 @@ import product from './routes/api/products'
 import invoice from './routes/api/invoices'
 import payslip from './routes/api/payslips'
 import materials from './routes/api/materials'
+import reciepts from './routes/api/reciepts'
 
 const app = express()
 
@@ -53,6 +54,7 @@ app.use('/api/category', categories)
 app.use('/api/supplier', suppliers)
 app.use('/api/user', users)
 app.use('/api/material', materials)
+app.use('/api/reciept', reciepts)
 
 const port = process.env.PORT || 5000
 
