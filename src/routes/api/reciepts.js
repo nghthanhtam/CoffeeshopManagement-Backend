@@ -4,35 +4,53 @@ import auth from '../../middleware/auth'
 
 import Reciept from '../../models/Receipt'
 
-router.get('/:id', ({ params }, res) => {
-  PaySlip.findById(params.id)
-    .then(payslip => {
-      res.json(payslip)
-    })
-    .catch(err => res.json(err))
-})
-
-router.get('', (req, res) => {
-  PaySlip.find()
-    .then(payslip => {
-      res.json(payslip)
-    })
-    .catch(err => res.json(err))
-})
-
-router.put('/:id', ({ body }, res) => {
-  const newPaySlip = {
-    idMember: body.idMember,
-    idSupplier: body.idSupplier,
-    createddate: body.createddate,
-    totalAmt: body.totalAmt,
-    _id: body._id
+router.get('/:id', auth, async ({ params }, res, next) => {
+  try {
+    let reciept = await Reciept.findById(params.id)
+    res.json(reciept)
+  } catch (err) {
+    res.json(err)
   }
-  PaySlip.findByIdAndUpdate(body._id, newPaySlip, { new: true })
-    .then(payslip => {
-      res.json(payslip)
+})
+
+router.get('', async (req, res, next) => {
+  try {
+    let reciepts = await Reciept.find()
+
+    res.json(reciepts)
+  } catch (err) {
+    res.json(err)
+  }
+})
+
+router.put('/:id', auth, async ({ body, params, user }, res) => {
+  try {
+    let newReciept = {
+      idUser: user.id,
+      idSupplier: body.idSupplier,
+      createdDate: body.createdDate,
+      items: body.items
+    }
+
+    let { items } = newReciept
+    let amountDue = 0
+
+    items.forEach(item => {
+      item.total = item.quantity * item.price
+      amountDue += item.total
     })
-    .catch(err => res.json(err))
+
+    newReciept.amountDue = amountDue
+
+    let receipt = await Reciept.findByIdAndUpdate(params.id, newReciept, {
+      new: true,
+      overwrite: true
+    })
+
+    res.json(receipt)
+  } catch (err) {
+    res.json(err)
+  }
 })
 
 router.get('/:objects/:page/:query', ({ params }, res) => {
@@ -41,11 +59,11 @@ router.get('/:objects/:page/:query', ({ params }, res) => {
   if (query === 'undefined') newQuery = ''
   else newQuery = query
 
-  PaySlip.find({ idMember: { $regex: newQuery, $options: 'i' } })
+  Reciept.find({ idMember: { $regex: newQuery, $options: 'i' } })
     .limit(Number(objects))
     .skip(objects * (page - 1))
     .sort({ createddate: -1 })
-    .then(payslip => res.json(payslip))
+    .then(reciept => res.json(reciept))
     .catch(err => res.json(err))
 })
 
@@ -55,7 +73,7 @@ router.get('/count/:query', ({ params }, res) => {
   if (query === 'undefined') newQuery = ''
   else newQuery = query
 
-  PaySlip.find({ idMember: { $regex: newQuery, $options: 'i' } })
+  Reciept.find({ idMember: { $regex: newQuery, $options: 'i' } })
     .countDocuments()
     .sort({ createddate: -1 })
     .then(counter => res.json(counter))
@@ -73,18 +91,26 @@ router.post('/', auth, ({ body, user }, res) => {
   let { items } = newReciept
   let amountDue = 0
 
-  items.forEach(item => (amountDue += item.quantity * item.price))
+  items.forEach(item => {
+    item.total = item.quantity * item.price
+    amountDue += item.total
+  })
+
   newReciept.amountDue = amountDue
+
   newReciept
     .save()
     .then(reciept => res.json(reciept))
     .catch(err => res.json(err))
 })
 
-router.delete('/:id', auth, ({ params }, res) => {
-  Reciept.findByIdAndDelete(params.id)
-    .then(reciept => res.json(reciept))
-    .catch(err => res.json(err))
+router.delete('/:id', auth, async ({ params }, res, next) => {
+  try {
+    await Reciept.findByIdAndDelete(params.id)
+    res.json({ msg: 'ok' })
+  } catch (err) {
+    res.json(err)
+  }
 })
 
 export default router
