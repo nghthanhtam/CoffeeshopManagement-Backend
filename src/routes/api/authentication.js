@@ -29,8 +29,10 @@ router.post('/', async ({ body }, res, next) => {
 
     let token = jwt.sign(
       {
+        name: user.username,
         id: user.id,
-        role: user.idRole
+        idRole: user.idRole,
+        fullName: user.fullName
       },
       process.env.jwtSecret,
       { expiresIn: 24 * 3600 }

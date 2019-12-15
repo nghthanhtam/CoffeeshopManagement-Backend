@@ -25,13 +25,13 @@ var ItemSchema = new mongoose.Schema({
 })
 
 const RecieptSchema = new Schema({
-  idUser: {
-    type: String,
-    required: true
+  user: {
+    name: { type: String },
+    id: { type: String }
   },
-  idSupplier: {
-    type: String,
-    required: true
+  supplier: {
+    name: { type: String },
+    id: { type: String }
   },
   createdDate: {
     type: Date,

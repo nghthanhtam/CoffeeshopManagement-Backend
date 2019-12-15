@@ -3,6 +3,7 @@ const router = express.Router()
 import auth from '../../middleware/auth'
 
 import Reciept from '../../models/Receipt'
+import Supplier from '../../models/Supplier'
 
 router.get('/:id', auth, async ({ params }, res, next) => {
   try {
@@ -15,7 +16,7 @@ router.get('/:id', auth, async ({ params }, res, next) => {
 
 router.get('', async (req, res, next) => {
   try {
-    let reciepts = await Reciept.find()
+    let reciepts = await Reciept.find().select('-items')
 
     res.json(reciepts)
   } catch (err) {
@@ -31,6 +32,22 @@ router.put('/:id', auth, async ({ body, params, user }, res) => {
       createdDate: body.createdDate,
       items: body.items
     }
+
+    let supplier = await Supplier.findById(body.idSupplier)
+
+    let supplierData = {
+      name: supplier.name,
+      id: supplier.id
+    }
+
+    newReciept.supplier = supplierData
+
+    let userData = {
+      name: user.fullName,
+      id: user.id
+    }
+
+    newReciept.user = userData
 
     let { items } = newReciept
     let amountDue = 0
@@ -80,13 +97,28 @@ router.get('/count/:query', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.post('/', auth, ({ body, user }, res) => {
+router.post('/', auth, async ({ body, user }, res, next) => {
   let newReciept = new Reciept({
     idUser: user.id,
-    idSupplier: body.idSupplier,
     createdDate: body.createdDate,
     items: body.items
   })
+
+  let supplier = await Supplier.findById(body.idSupplier)
+
+  let supplierData = {
+    name: supplier.name,
+    id: supplier._id
+  }
+
+  newReciept.supplier = supplierData
+
+  let userData = {
+    name: user.fullName,
+    id: user.id
+  }
+
+  newReciept.user = userData
 
   let { items } = newReciept
   let amountDue = 0
