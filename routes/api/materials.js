@@ -19,7 +19,8 @@ router.get("/getall/:query", (req, res) => {
     if (query === "undefined") newQuery = "";
     else newQuery = query;
 
-    Material.find({ name: { $regex: newQuery, $options: "i" } })
+    //Material.find({ name: { $regex: newQuery, $options: "i" } })
+    Material.find()
         .sort({ createAt: -1 }) //desc = -1 acs = 1
         .then(material => res.json(material)) //return lại item 
         .catch(err => res.json(err)); //Catch lỗi rồi return ra;

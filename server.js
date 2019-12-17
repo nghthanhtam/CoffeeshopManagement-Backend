@@ -10,6 +10,7 @@ const users = require('./routes/api/users')
 const members = require('./routes/api/members')
 const storagereports = require('./routes/api/storagereports')
 const materials = require('./routes/api/materials')
+const invoicedets = require('./routes/api/invoicedets')
 
 const app = express()
 
@@ -40,6 +41,7 @@ app.use('/api/invoice', require('./routes/api/invoices'))
 app.use('/api/payslip', require('./routes/api/payslips'))
 app.use('/api/material', require('./routes/api/materials'))
 app.use('/api/storagereport', require('./routes/api/storagereports'))
+app.use('/api/invoicedet', require('./routes/api/invoicedets'))
 
 //Use routes (Mỗi lần tạo 1 route mới thì phải use nó ở đây thì mới chạy đc)
 app.use('/api/category', categories)
@@ -48,6 +50,7 @@ app.use('/api/supplier', suppliers)
 app.use('/api/user', users)
 app.use('/api/material', materials)
 app.use('/api/storagereport', storagereports)
+app.use('/api/invoicedet', invoicedets)
 
 const port = process.env.PORT || 5000
 

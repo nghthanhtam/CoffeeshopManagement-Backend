@@ -3,35 +3,31 @@ const Schema = mongoose.Schema;
 
 //Create Schema
 
-const InvoiceSchema = new Schema({
+const InvoiceDetSchema = new Schema({
   //Không cần thuộc tính ID vì trong MongoDB sẽ tự tạo ID cho mình khi insert vào
-  idMember: {
+  idInvoice: {
     type: String,
     required: true
   },
-  idUser: {
+  idProduct: {
     type: String,
     required: true
   },
-  totalAmt: {
+  price: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  quantity: {
     type: Number,
     required: true,
     default: 0
   },
-  createddate: {
-    type: Date,
-    required: false,
-    default: new Date()
-  },
-  comments: {
-    type: String,
-    required: false,
-  },
-  status: {
+  discount: {
     type: Number,
-    default: 1,
+    required: false,
   }
 });
 
-module.exports = Invoice = mongoose.model("invoice", InvoiceSchema);
+module.exports = InvoiceDet = mongoose.model("invoicedet", InvoiceDetSchema);
 

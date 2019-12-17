@@ -92,7 +92,6 @@ router.delete("/:id", (req, res) => {
   //     .then(item => item.remove().then(() => res.json({ success: true })))
   //     .catch(err => res.status(404).json({ success: false }));
   // ----------------Cách 2------------------
-  console.log(req.params.id);
 
   PaySlip.findByIdAndDelete(req.params.id)
     .then(payslip => res.json(payslip)) //Return lại item đã xóa
