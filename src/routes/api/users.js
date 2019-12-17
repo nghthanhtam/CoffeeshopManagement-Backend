@@ -5,75 +5,90 @@ import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 
 import User from '../../models/User'
+import auth from '../../middleware/auth'
+import role from '../../middleware/role'
+import Role from '../../Role'
 
-router.post('/', async ({ body }, res, next) => {
-  try {
-    const { idRole, username, password, fullName, phoneNumber, address } = body
+router.post(
+  '/',
+  auth,
+  role(Role.userManagement),
+  async ({ body }, res, next) => {
+    try {
+      const {
+        idRole,
+        username,
+        password,
+        fullName,
+        phoneNumber,
+        address
+      } = body
 
-    if (
-      !username ||
-      !idRole ||
-      !fullName ||
-      !phoneNumber ||
-      !address ||
-      !password
-    ) {
-      return res.status(400).json({ msg: 'Please enter all fields' })
-    }
+      if (
+        !username ||
+        !idRole ||
+        !fullName ||
+        !phoneNumber ||
+        !address ||
+        !password
+      ) {
+        return res.status(400).json({ msg: 'Please enter all fields' })
+      }
 
-    let user = await User.findOne({ username })
+      let user = await User.findOne({ username })
 
-    if (user) {
-      return res.status(400).json({ msg: 'User already exist' })
-    }
+      if (user) {
+        return res.status(400).json({ msg: 'User already exist' })
+      }
 
-    const newUser = new User({
-      username,
-      idRole,
-      fullName,
-      phoneNumber,
-      address,
-      password
-    })
-
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err
-        newUser.password = hash
-        newUser
-          .save()
-          .then(user => {
-            jwt.sign(
-              {
-                id: user.id,
-                idRole: user.idRole,
-                role
-              },
-              process.env.jwtSecret,
-              { expiresIn: 24 * 3600 },
-              (err, token) => {
-                if (err) throw err
-                res.json({
-                  token,
-                  user: {
-                    id: user.id,
-                    idRole: user.idRole
-                  },
-                  role
-                })
-              }
-            )
-          })
-
-          .catch(err => res.json(err))
+      const newUser = new User({
+        username,
+        idRole,
+        fullName,
+        phoneNumber,
+        address,
+        password
       })
-    })
-  } catch (error) {
-    return next(error)
-  }
-})
 
-router.get('/:id', (req, res) => {
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err
+          newUser.password = hash
+          newUser
+            .save()
+            .then(user => {
+              jwt.sign(
+                {
+                  id: user.id,
+                  idRole: user.idRole,
+                  role
+                },
+                process.env.jwtSecret,
+                { expiresIn: 24 * 3600 },
+                (err, token) => {
+                  if (err) throw err
+                  res.json({
+                    token,
+                    user: {
+                      id: user.id,
+                      idRole: user.idRole
+                    },
+                    role
+                  })
+                }
+              )
+            })
+
+            .catch(err => res.json(err))
+        })
+      })
+    } catch (error) {
+      return next(error)
+    }
+  }
+)
+
+router.get('/:id', auth, role(Role.userManagement), (req, res) => {
   User.findById(req.params.id)
     .then(user => {
       res.json(user)
@@ -81,7 +96,7 @@ router.get('/:id', (req, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, role(Role.userManagement), (req, res) => {
   const newUser = ({
     idRole,
     username,
@@ -102,19 +117,24 @@ router.put('/:id', (req, res) => {
   })
 })
 
-router.get('/:objects/:page/:query', (req, res) => {
-  const { objects, page, query } = req.params
-  let newQuery = ''
-  if (query === 'undefined') newQuery = ''
-  else newQuery = query
+router.get(
+  '/:objects/:page/:query',
+  auth,
+  role(Role.userManagement),
+  (req, res) => {
+    const { objects, page, query } = req.params
+    let newQuery = ''
+    if (query === 'undefined') newQuery = ''
+    else newQuery = query
 
-  User.find({ username: { $regex: newQuery, $options: 'i' } })
-    .limit(Number(objects))
-    .skip(objects * (page - 1))
+    User.find({ username: { $regex: newQuery, $options: 'i' } })
+      .limit(Number(objects))
+      .skip(objects * (page - 1))
 
-    .then(user => res.json(user))
-    .catch(err => res.json(err))
-})
+      .then(user => res.json(user))
+      .catch(err => res.json(err))
+  }
+)
 
 router.get('/count/:query', (req, res) => {
   const { query } = req.params
@@ -129,13 +149,13 @@ router.get('/count/:query', (req, res) => {
     .catch(err => res.json(err))
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, role(Role.userManagement), (req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))
 })
 
-router.post('/cp/:id', (req, res) => {
+router.post('/cp/:id', auth, role(Role.userManagement), (req, res) => {
   const username = req.body.username
   const password = req.body.curPassword
 

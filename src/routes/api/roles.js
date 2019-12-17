@@ -12,34 +12,35 @@ router.get('/:id', auth, role('roleManagement'), ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', auth, role('roleManagement'), ({ body }, res) => {
+router.put('/:id', auth, role('roleManagement'), ({ body, params }, res) => {
   const {
     name,
     memberManagement,
     productManagement,
     categoryManagement,
-    customerManagement,
+    userManagement,
     invoiceManagement,
     supplierManagement,
-    billManagement,
+    payslipManagement,
     materialManagement,
     roleManagement,
     materialReceiptNoteManagement
   } = body
   const newRole = {
+    _id: params.id,
     name,
     memberManagement,
     productManagement,
     categoryManagement,
-    customerManagement,
+    userManagement,
     invoiceManagement,
     supplierManagement,
-    billManagement,
+    payslipManagement,
     materialManagement,
     materialReceiptNoteManagement,
     roleManagement
   }
-  Role.findByIdAndUpdate(body._id, newRole, { new: true })
+  Role.findByIdAndUpdate(params.id, newRole, { new: true })
     .then(role => {
       res.json(role)
     })
@@ -85,14 +86,15 @@ router.post('/', auth, role('roleManagement'), ({ body }, res) => {
     memberManagement,
     productManagement,
     categoryManagement,
-    customerManagement,
+    userManagement,
     invoiceManagement,
     supplierManagement,
-    billManagement,
+    payslipManagement,
     materialManagement,
     roleManagement,
     materialReceiptNoteManagement
   } = body
+  console.log(body)
 
   const newRole = new Role({
     _id,
@@ -100,14 +102,15 @@ router.post('/', auth, role('roleManagement'), ({ body }, res) => {
     memberManagement,
     productManagement,
     categoryManagement,
-    customerManagement,
+    userManagement,
     invoiceManagement,
     supplierManagement,
-    billManagement,
+    payslipManagement,
     materialManagement,
     roleManagement,
     materialReceiptNoteManagement
   })
+  console.log(newRole)
 
   newRole
     .save()

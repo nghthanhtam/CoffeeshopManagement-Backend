@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import 'dotenv/config'
 import 'babel-core/register'
 import 'babel-polyfill'
+import bcrypt from 'bcryptjs'
 
 import categories from './routes/api/categories'
 import suppliers from './routes/api/suppliers'
@@ -17,6 +18,9 @@ import product from './routes/api/products'
 import invoice from './routes/api/invoices'
 import payslip from './routes/api/payslips'
 import materials from './routes/api/materials'
+
+import User from './models/User'
+import Role from './models/Role'
 
 const app = express()
 
@@ -37,8 +41,63 @@ const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', () => {
   console.log('connect to mongodb')
-})
 
+  Role.findOne({ name: 'admin' })
+    .then(role => {
+      let roleID
+      if (role === null) {
+        console.log('Creating role admin')
+
+        roleID = mongoose.Types.ObjectId()
+        const roleAdmin = new Role({
+          _id: roleID,
+          name: 'admin',
+          memberManagement: true,
+          productManagement: true,
+          categoryManagement: true,
+          userManagement: true,
+          invoiceManagement: true,
+          supplierManagement: true,
+          payslipManagement: true,
+          materialManagement: true,
+          roleManagement: true,
+          materialReceiptNoteManagement: true
+        })
+        roleAdmin
+          .save()
+          .then(role => console.log(`Added Role ${role.name} succesfully`))
+          .catch(err => console.log(err))
+      } else console.log("Role 'Admin' already exists!!!")
+
+      User.findOne({ username: 'admin' })
+        .then(admin => {
+          if (admin === null) {
+            console.log('Creating user admin')
+            const admin = new User({
+              username: 'admin',
+              idRole: roleID,
+              password: 'admin'
+            })
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(admin.password, salt, (err, hash) => {
+                if (err) throw err
+                admin.password = hash
+                admin
+                  .save()
+                  .then(user => {
+                    console.log(`Added user ${user.username}  succesfully`)
+                  })
+                  .catch(err => console.log(err))
+              })
+            })
+          } else {
+            console.log(`User ${admin.username} already exists!!!`)
+          }
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+})
 app.get('/ping', (req, res) => {
   res.json('pong')
 })

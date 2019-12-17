@@ -3,7 +3,11 @@ const router = express.Router()
 
 import Product from '../../models/Product'
 
-router.get('/:id', ({ params }, res) => {
+import auth from '../../middleware/auth'
+import role from '../../middleware/role'
+import Role from '../../Role'
+
+router.get('/:id', auth, role(Role.productManagement), ({ params }, res) => {
   Product.findById(params.id)
     .then(product => {
       res.json(product)
@@ -11,35 +15,45 @@ router.get('/:id', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', ({ body }, res) => {
-  const newProduct = {
-    idCategory: body.idCategory,
-    name: body.name,
-    price: body.price,
-    quantity: body.quantity,
-    status: body.status,
-    _id: body._id
+router.put(
+  '/:id',
+  auth,
+  role(Role.productManagement),
+  ({ body, params }, res) => {
+    const newProduct = {
+      idCategory: body.idCategory,
+      name: body.name,
+      price: body.price,
+      quantity: body.quantity,
+      status: body.status,
+      _id: params.id
+    }
+    Product.findByIdAndUpdate(params.id, newProduct, { new: true })
+      .then(product => {
+        res.json(product)
+      })
+      .catch(err => res.json(err))
   }
-  Product.findByIdAndUpdate(body._id, newProduct, { new: true })
-    .then(product => {
-      res.json(product)
-    })
-    .catch(err => res.json(err))
-})
+)
 
-router.get('/:objects/:page/:query', ({ params }, res) => {
-  const { objects, page, query } = params
-  let newQuery = ''
-  if (query === 'undefined') newQuery = ''
-  else newQuery = query
+router.get(
+  '/:objects/:page/:query',
+  auth,
+  role(Role.productManagement),
+  ({ params }, res) => {
+    const { objects, page, query } = params
+    let newQuery = ''
+    if (query === 'undefined') newQuery = ''
+    else newQuery = query
 
-  Product.find({ name: { $regex: newQuery, $options: 'i' } })
-    .limit(Number(objects))
-    .skip(objects * (page - 1))
-    .sort({ createAt: -1 })
-    .then(product => res.json(product))
-    .catch(err => res.json(err))
-})
+    Product.find({ name: { $regex: newQuery, $options: 'i' } })
+      .limit(Number(objects))
+      .skip(objects * (page - 1))
+      .sort({ createAt: -1 })
+      .then(product => res.json(product))
+      .catch(err => res.json(err))
+  }
+)
 
 router.get('/count/:query', ({ params }, res) => {
   const { query } = params
@@ -54,7 +68,7 @@ router.get('/count/:query', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.post('/', ({ body }, res) => {
+router.post('/', auth, role(Role.productManagement), ({ body }, res) => {
   const newProduct = new Product({
     _id: body._id,
     idCategory: body.idCategory,
@@ -70,7 +84,7 @@ router.post('/', ({ body }, res) => {
     .catch(err => res.json(err))
 })
 
-router.delete('/:id', ({ params }, res) => {
+router.delete('/:id', auth, role(Role.productManagement), ({ params }, res) => {
   Product.findByIdAndDelete(params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))

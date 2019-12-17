@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
-const PaySlipSchema = new Schema({
-  idMember: {
+const PayslipSchema = new Schema({
+  idUser: {
     type: String,
     required: false
   },
@@ -22,6 +22,6 @@ const PaySlipSchema = new Schema({
   }
 })
 
-const PaySlip = mongoose.model('payslip', PaySlipSchema)
+const Payslip = mongoose.model('payslip', PayslipSchema)
 
-export default PaySlip
+export default Payslip

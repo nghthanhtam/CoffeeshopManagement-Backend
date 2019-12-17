@@ -2,8 +2,11 @@ import express from 'express'
 const router = express.Router()
 
 import Invoice from '../../models/Invoice'
+import auth from '../../middleware/auth'
+import role from '../../middleware/role'
+import Role from '../../Role'
 
-router.get('/:id', ({ params }, res) => {
+router.get('/:id', auth, role(Role.invoiceManagement), ({ params }, res) => {
   Invoice.findById(params.id)
     .then(invoice => {
       res.json(invoice)
@@ -11,35 +14,45 @@ router.get('/:id', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.put('/:id', ({ body }, res) => {
-  const newInvoice = {
-    idMember: body.idMember,
-    idUser: body.idUser,
-    totalAmt: body.totalAmt,
-    createddate: body.createddate,
-    comments: body.comments,
-    _id: body._id
+router.put(
+  '/:id',
+  auth,
+  role(Role.invoiceManagement),
+  ({ body, params }, res) => {
+    const newInvoice = {
+      idMember: body.idMember,
+      idUser: body.idUser,
+      totalAmt: body.totalAmt,
+      createddate: body.createddate,
+      comments: body.comments,
+      _id: params.id
+    }
+    Invoice.findByIdAndUpdate(params.id, newInvoice, { new: true })
+      .then(invoice => {
+        res.json(invoice)
+      })
+      .catch(err => res.json(err))
   }
-  Invoice.findByIdAndUpdate(body._id, newInvoice, { new: true })
-    .then(invoice => {
-      res.json(invoice)
-    })
-    .catch(err => res.json(err))
-})
+)
 
-router.get('/:objects/:page/:query', ({ params }, res) => {
-  const { objects, page, query } = params
-  let newQuery = ''
-  if (query === 'undefined') newQuery = ''
-  else newQuery = query
+router.get(
+  '/:objects/:page/:query',
+  auth,
+  role(Role.invoiceManagement),
+  ({ params }, res) => {
+    const { objects, page, query } = params
+    let newQuery = ''
+    if (query === 'undefined') newQuery = ''
+    else newQuery = query
 
-  Invoice.find({ idMember: { $regex: newQuery, $options: 'i' } })
-    .limit(Number(objects))
-    .skip(objects * (page - 1))
+    Invoice.find({ idMember: { $regex: newQuery, $options: 'i' } })
+      .limit(Number(objects))
+      .skip(objects * (page - 1))
 
-    .then(invoice => res.json(invoice))
-    .catch(err => res.json(err))
-})
+      .then(invoice => res.json(invoice))
+      .catch(err => res.json(err))
+  }
+)
 
 router.get('/count/:query', ({ params }, res) => {
   const { query } = params
@@ -54,7 +67,7 @@ router.get('/count/:query', ({ params }, res) => {
     .catch(err => res.json(err))
 })
 
-router.post('/', ({ body }, res) => {
+router.post('/', auth, role(Role.invoiceManagement), ({ body }, res) => {
   const newInvoice = new Invoice({
     _id: body._id,
     idMember: body.idMember,
@@ -70,7 +83,7 @@ router.post('/', ({ body }, res) => {
     .catch(err => res.json(err))
 })
 
-router.delete('/:id', ({ params }, res) => {
+router.delete('/:id', auth, role(Role.invoiceManagement), ({ params }, res) => {
   Invoice.findByIdAndDelete(params.id)
     .then(item => res.json(item))
     .catch(err => res.json(err))

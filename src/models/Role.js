@@ -19,7 +19,7 @@ const RoleSchema = new Schema({
     type: Boolean,
     required: true
   },
-  customerManagement: {
+  userManagement: {
     type: Boolean,
     required: true
   },
@@ -31,7 +31,7 @@ const RoleSchema = new Schema({
     type: Boolean,
     required: true
   },
-  billManagement: {
+  payslipManagement: {
     type: Boolean,
     required: true
   },
