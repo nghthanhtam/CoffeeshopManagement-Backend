@@ -18,5 +18,6 @@ const MaterialSchema = new Schema({
     required: true
   }
 })
+const Material = mongoose.model('material', MaterialSchema)
 
-module.exports = Material = mongoose.model('material', MaterialSchema)
+export default Material
