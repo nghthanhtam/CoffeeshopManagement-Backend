@@ -1,10 +1,12 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+
+//Create Schema
 
 const MaterialSchema = new Schema({
   name: {
-    type: String,
-    required: true
+    type: String, // Kiểu String
+    required: true //=> khi insert vào thì bắt buộc phải có "name"
   },
   createAt: {
     type: Date,
@@ -17,6 +19,4 @@ const MaterialSchema = new Schema({
   }
 })
 
-const Material = mongoose.model('material', MaterialSchema)
-
-export default Material
+module.exports = Material = mongoose.model('material', MaterialSchema)
